@@ -4,9 +4,11 @@ module.exports = {
   "plugins": [
       "react",
       "jsx-a11y",
-      "import"
+      "import",
+      "mocha",
   ],
   "rules": {
+    "arrow-parens": 0,
     "eqeqeq": [2, "smart"],
     "curly": 2,
     "quotes": [2, "single", "avoid-escape"],
@@ -149,5 +151,11 @@ module.exports = {
     "dot-location": 2,
     "import/no-named-as-default": 1,
     "prefer-spread": 1
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "es6": true
   },
 };
