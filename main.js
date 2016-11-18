@@ -1,4 +1,5 @@
 const electron = require('electron');
+const { runClient, sendMessage } = require('./lib/socketClient');
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -6,6 +7,14 @@ const BrowserWindow = electron.BrowserWindow;
 
 const path = require('path');
 const url = require('url');
+
+electron.ipcMain.on('asynchronous-message', async (event, arg) => {
+  console.log(arg);  // prints "ping"
+
+  await runClient();
+  await sendMessage();
+  event.sender.send('asynchronous-reply', 'pong');
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

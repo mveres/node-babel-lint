@@ -19,14 +19,15 @@
     "babel-preset-react": "^6.16.0",
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
-    "electron": "^1.4.6",
+    "electron": "^1.4.7",
     "eslint": "^3.10.0",
     "eslint-plugin-mocha": "^4.7.0",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+    "webpack-target-electron-renderer": "^0.4.0"
   },
   "devDependencies": {
     "eslint": "^3.10.0",
@@ -40,7 +41,7 @@
     "build": "babel lib -d dist",
     "serve": "node dist/index.js",
     "test": "mocha test --compilers js:babel-core/register --require babel-polyfill",
-    "electron": "electron electron-main.js",
-    "electron-dev": "webpack -d --progress --colors --watch | electron electron-main.js"
+    "electron": "electron bootstrapper.js",
+    "electron-dev": "webpack -d --progress --colors --watch | electron bootstrapper.js"
   }
 }

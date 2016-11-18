@@ -6,10 +6,22 @@ var BUILD_DIR = path.resolve(__dirname, 'client/public');
 var APP_DIR = path.resolve(__dirname, 'client/app');
 
 var config = {
-  entry: APP_DIR + '/app.js',
+  entry: ['babel-polyfill', APP_DIR + '/app.js'],
   output: {
     path: BUILD_DIR,
     filename: 'bundle.js'
+  },
+  externals: {
+    electron: 'require("electron")',
+    net: 'require("net")',
+    remote: 'require("remote")',
+    shell: 'require("shell")',
+    app: 'require("app")',
+    ipc: 'require("ipc")',
+    fs: 'require("fs")',
+    buffer: 'require("buffer")',
+    system: '{}',
+    file: '{}'
   },
   module: {
     loaders: [
