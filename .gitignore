@@ -1,3 +1,5 @@
 node_modules
 dist
 client/public
+electron-out
+.DS_Store

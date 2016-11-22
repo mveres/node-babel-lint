@@ -1,7 +1,7 @@
 {
   "name": "nodeEs6",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/electron/bootstrapper.js",
   "author": "mveres <veres85@yahoo.com>",
   "license": "MIT",
   "dependencies": {
@@ -20,6 +20,7 @@
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "electron": "^1.4.7",
+    "electron-packager": "^8.3.0",
     "eslint": "^3.10.0",
     "eslint-plugin-mocha": "^4.7.0",
     "mocha": "^3.1.2",
@@ -38,10 +39,11 @@
   },
   "scripts": {
     "start": "nodemon lib/index.js --exec babel-node",
-    "build": "babel lib -d dist",
+    "build": "babel lib -d dist && webpack -d --progress --colors",
+    "build-watch": "babel lib -d dist -w | webpack -d --progress --colors --watch",
     "serve": "node dist/index.js",
     "test": "mocha test --compilers js:babel-core/register --require babel-polyfill",
-    "electron": "electron bootstrapper.js",
-    "electron-dev": "webpack -d --progress --colors --watch | electron bootstrapper.js"
+    "electron": "electron lib/electron/bootstrapper.js",
+    "package": "electron-packager . PyroMusic --all --out electron-out --overwrite"
   }
 }
