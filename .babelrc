@@ -1,5 +1,5 @@
 {
-  "presets": ["latest", "react"],
+  "presets": ["latest", "react", "stage-1"],
   "plugins": [
     "transform-es2015-destructuring",
     "transform-es2015-parameters",
