@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ipcRenderer } from 'electron';
+import LoadMusic from './loadMusic';
+import Player from './player';
 
 const connect = options => ipcRenderer.send('connect', options);
 const send = data => ipcRenderer.send('send', data);
@@ -11,7 +13,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { host: '192.168.1.185', port: '1109' };
+    this.state = {
+      host: '192.168.1.185',
+      port: '1109',
+    };
 
     ipcRenderer.on('connect-reply', (event, { connected }) => {
       this.setState({ connected });
@@ -38,6 +43,9 @@ class App extends React.Component {
         <div> { this.state.connected ? 'Connected' : 'Not Connected'} </div>
         <button onClick={ () => connect(this.state) } disabled={ !!this.state.connected }>Connect</button>
         <button onClick={ () => send('') } disabled={ !this.state.connected }>Send</button>
+
+        <LoadMusic onMusicLoaded={ musicApi => this.setState({ musicApi }) } />
+        <Player musicApi={ this.state.musicApi } />
       </div>
     );
   }
