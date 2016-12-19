@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ipcRenderer } from 'electron';
 import LoadMusic from './loadMusic';
+import Relays from './relays';
 import Player from './player';
 
 const connect = options => ipcRenderer.send('connect', options);
 const send = data => ipcRenderer.send('send', data);
-
 
 class App extends React.Component {
 
@@ -25,7 +25,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="app-container">
         <label htmlFor="host">
           Host:
           <input type="text"
@@ -45,7 +45,8 @@ class App extends React.Component {
         <button onClick={ () => send('') } disabled={ !this.state.connected }>Send</button>
 
         <LoadMusic onMusicLoaded={ musicApi => this.setState({ musicApi }) } />
-        <Player musicApi={ this.state.musicApi } />
+        <Relays onRelayTimeMapChanged={ relayTimeMap => this.setState({ relayTimeMap }) } />
+        <Player musicApi={ this.state.musicApi } relayTimeMap={ this.state.relayTimeMap || {} } />
       </div>
     );
   }

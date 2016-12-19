@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 
-const tickSize = 100; // miliseconds
+const tickSize = 0.1;
+const uiUnit = 20;
 
 export default class Player extends React.Component {
 
@@ -9,7 +11,7 @@ export default class Player extends React.Component {
 
     this.state = {
       currentTime: 0,
-      duration: 100000,
+      duration: 240,
       paused: true,
     };
   }
@@ -17,46 +19,82 @@ export default class Player extends React.Component {
   componentDidMount = () => {
     setInterval(() => {
       if (this.state.currentTime >= this.state.duration) {
-        this.setState({ paused: true });
+        this.stop();
         return;
       }
 
       if (!this.state.paused) this.setState({ currentTime: this.state.currentTime + tickSize });
 
-    }, tickSize);
+    }, tickSize * 1000);
   };
 
-  play = () => this.setState({ paused: false });
+  play = () => {
+    this.setState({ paused: false });
+    if (this.props.musicApi) this.props.musicApi.play();
+  };
 
-  pause = () => this.setState({ paused: true });
+  pause = () => {
+    this.setState({ paused: true });
+    if (this.props.musicApi) this.props.musicApi.pause();
+  };
 
-  stop = () => this.setState({ paused: true, currentTime: 0 });
+  stop = () => {
+    this.setState({ paused: true, currentTime: 0 });
+    if (this.props.musicApi) {
+      this.props.musicApi.pause();
+      this.props.musicApi.currentTime = 0;
+    }
+  };
 
-  render = () => {
+  renderMusicSegment = () => {
     const { musicApi } = this.props;
-    const { paused, currentTime, duration } = this.state;
-    const seekerPosition = currentTime * 100 / duration;
-    console.log({ seekerPosition });
+    if (!musicApi) return <noscript />;
+
+    const width = musicApi.duration * 100 / this.state.duration;
     return (
       <div>
-        <button disabled={ !musicApi }
-                onClick={ () => (musicApi.paused ? musicApi.play() : musicApi.pause()) }>
-          <i className={ musicApi && !musicApi.paused ? 'fa fa-pause' : 'fa fa-play' } />
-        </button>
-        <button disabled={ !musicApi }
-                onClick={ () => {
-                  musicApi.pause();
-                  musicApi.currentTime = 0;
-                } }>
-          <i className="fa fa-stop" />
-        </button>
-        <div>
-          <progress disabled={ !musicApi }
-                    value={ musicApi && musicApi.currentTime || 0 }
-                    max={ musicApi && musicApi.duration || 1 } />
-          { musicApi && <span>{ musicApi.currentTime }/{ musicApi.duration }</span> }
-        </div>
+        <div className="player-label" style={ { top: '0.5rem' } }>music</div>
+        <div className="player-segment" style={ { width: `${width}%` } } />
+      </div>
+    );
+  };
 
+  renderRuler = () => {
+    const unit = uiUnit * 100 / this.state.duration;
+    const barsNo = this.state.duration / uiUnit;
+
+    return _.range(1, barsNo)
+            .map(i => <div key={ i }>
+                    <div className="player-ruler-bar" style={ { left: `${i * unit}%` } } />
+                    <div className="player-ruler-stamp" style={ { left: `${i * unit - 0.5}%` } }>
+                      { `${uiUnit * i}s` }
+                    </div>
+                  </div>,
+                );
+  };
+
+  renderRelaySegments = () =>
+    Object.keys(this.props.relayTimeMap).map((relay, index) => {
+      const top = (this.props.musicApi ? 1.5 : 0) + 1.5 * index + 0.5;
+      return <div key={ index }>
+        <div className="player-label" style={ { top: `${top}rem` } }>{ `relay ${relay}` }</div>
+        {
+          this.props.relayTimeMap[relay].map(({ on, off }) => {
+            const left = on * 100 / this.state.duration;
+            const width = (off - on) * 100 / this.state.duration;
+            return <div key={ `${relay}${on}${off}` }
+                        className="player-segment"
+                        style={ { left: `${left}%`, width: `${width}%`, top: `${top}rem` } } />;
+          })
+        }
+      </div>;
+    });
+
+  render = () => {
+    const { paused, currentTime, duration } = this.state;
+    const seekerPosition = currentTime * 100 / duration;
+    return (
+      <div>
         <div>
           <button onClick={ () => (paused ? this.play() : this.pause()) }>
             <i className={ paused ? 'fa fa-play' : 'fa fa-pause' } />
@@ -65,10 +103,13 @@ export default class Player extends React.Component {
             <i className="fa fa-stop" />
           </button>
         </div>
+        <div>{ currentTime }/{ duration }</div>
         <div className="player-container">
+          { this.renderMusicSegment() }
+          { this.renderRelaySegments() }
           <div className="player-seeker" style={ { left: `${seekerPosition}%` } } />
+          { this.renderRuler() }
         </div>
-
       </div>
     );
   };

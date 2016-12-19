@@ -11,7 +11,7 @@ export default class LoadMusic extends React.Component {
     const reader = new FileReader();
     reader.onload = () => {
       this.audio.src = reader.result;
-      this.props.onMusicLoaded && this.props.onMusicLoaded(this.audio);
+      setTimeout(() => this.props.onMusicLoaded && this.props.onMusicLoaded(this.audio), 300);
     };
     reader.readAsDataURL(file);
   };
