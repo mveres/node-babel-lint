@@ -1,52 +1,59 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ipcRenderer } from 'electron';
+import Collapsible from 'react-collapsible';
+import Header from './header';
+import Connection from './connection';
 import LoadMusic from './loadMusic';
 import Relays from './relays';
 import Player from './player';
+import { switchRelay } from './relayAdapter';
 
-const connect = options => ipcRenderer.send('connect', options);
-const send = data => ipcRenderer.send('send', data);
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      host: '192.168.1.185',
-      port: '1109',
-    };
-
-    ipcRenderer.on('connect-reply', (event, { connected }) => {
-      this.setState({ connected });
-    });
+    this.state = {};
   }
+
+  onPlayerTick = (start, end) => {
+    const { relayTimeMap } = this.state;
+    if (!relayTimeMap) return;
+
+    Object.keys(relayTimeMap)
+          .map(relayNo =>
+            relayTimeMap[relayNo].map(({ on, off }) => [
+              ...(start <= on && on < end ? [{ no: relayNo, state: 'on' }] : []),
+              ...(start <= off && off < end ? [{ no: relayNo, state: 'off' }] : []),
+            ]).reduce((acc, current) => [...acc, ...current], []))
+          .reduce((acc, current) => [...acc, ...current], [])
+          .forEach(switchRelay);
+  };
 
   render() {
     return (
       <div className="app-container">
-        <label htmlFor="host">
-          Host:
-          <input type="text"
-                 name="host"
-                 onChange={ event => this.setState({ host: event.target.value }) }
-                 value={ this.state.host } />
-        </label>
-        <label htmlFor="port">
-          Port:
-          <input type="text"
-                 name="port"
-                 onChange={ event => this.setState({ port: event.target.value }) }
-                 value={ this.state.port } />
-        </label>
-        <div> { this.state.connected ? 'Connected' : 'Not Connected'} </div>
-        <button onClick={ () => connect(this.state) } disabled={ !!this.state.connected }>Connect</button>
-        <button onClick={ () => send('') } disabled={ !this.state.connected }>Send</button>
-
-        <LoadMusic onMusicLoaded={ musicApi => this.setState({ musicApi }) } />
-        <Relays onRelayTimeMapChanged={ relayTimeMap => this.setState({ relayTimeMap }) } />
-        <Player musicApi={ this.state.musicApi } relayTimeMap={ this.state.relayTimeMap || {} } />
+        <Collapsible trigger={ <Header text="Connection" /> }
+                     triggerWhenOpen={ <Header text="Connection" open={ true } /> }>
+          <div className="collapsible-content">
+            <Connection />
+          </div>
+        </Collapsible>
+        <Collapsible trigger={ <Header text="Load Music" /> }
+                     triggerWhenOpen={ <Header text="Load Music" open={ true } /> }>
+          <div className="collapsible-content">
+            <LoadMusic onMusicLoaded={ musicApi => this.setState({ musicApi }) } />
+          </div>
+        </Collapsible>
+        <Collapsible trigger={ <Header text="Relay Config" /> }
+                     triggerWhenOpen={ <Header text="Relay Config" open={ true } /> }>
+          <div className="collapsible-content">
+            <Relays onRelayTimeMapChanged={ relayTimeMap => this.setState({ relayTimeMap }) } />
+          </div>
+        </Collapsible>
+        <Player musicApi={ this.state.musicApi }
+                relayTimeMap={ this.state.relayTimeMap || {} }
+                onTick={ this.onPlayerTick } />
       </div>
     );
   }

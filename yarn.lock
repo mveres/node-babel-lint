@@ -3301,6 +3301,10 @@ react:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
+react-collapsible:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-collapsible/-/react-collapsible-1.2.0.tgz#3603cc0cf1b7125e78162d83b748673353c2b92f"
+
 react-dom:
   version "15.4.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.4.0.tgz#6a97a69000966570db48c746bc4b7b0ca50d1534"

@@ -47,8 +47,7 @@ export default class Relays extends React.Component {
       </button>
     </div>;
 
-  render = () => {
-    console.log(this.state);
+  render = () => { // eslint-disable-line
     return <div>
       { this.renderRelayTimeMap() }
       { this.state.adding ? this.renderAddInput() : <noscript /> }

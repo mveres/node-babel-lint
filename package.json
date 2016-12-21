@@ -29,6 +29,7 @@
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "react": "^15.4.0",
+    "react-collapsible": "^1.2.0",
     "react-dom": "^15.4.0",
     "webpack": "^1.13.3",
     "webpack-target-electron-renderer": "^0.4.0"
@@ -44,7 +45,6 @@
     "start": "nodemon lib/index.js --exec babel-node",
     "build": "babel lib -d dist && webpack -d --progress --colors",
     "build-watch": "babel lib -d dist -w | webpack -d --progress --colors --watch",
-    "serve": "node dist/index.js",
     "test": "mocha test --compilers js:babel-core/register --require babel-polyfill",
     "electron": "electron lib/electron/bootstrapper.js",
     "package": "electron-packager . PyroMusic --all --out electron-out --overwrite"

@@ -18,12 +18,16 @@ export default class Player extends React.Component {
 
   componentDidMount = () => {
     setInterval(() => {
-      if (this.state.currentTime >= this.state.duration) {
+      const { currentTime, duration, paused } = this.state;
+      if (currentTime >= duration) {
         this.stop();
         return;
       }
 
-      if (!this.state.paused) this.setState({ currentTime: this.state.currentTime + tickSize });
+      if (!paused) {
+        this.props.onTick && this.props.onTick(currentTime, currentTime + tickSize);
+        this.setState({ currentTime: currentTime + tickSize });
+      }
 
     }, tickSize * 1000);
   };

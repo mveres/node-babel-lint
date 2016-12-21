@@ -2,7 +2,6 @@ body {
   background-color: #2C1C1C;
   color: #AACCFF;
   padding: 1rem;
-  /*font-family: Monaco, monospace;*/
 }
 
 .player-container {
@@ -47,4 +46,54 @@ body {
   position: absolute;
   font-size: 0.9rem;
   left: -3rem;
+}
+
+.collapsible-header {
+  padding: 0.3rem;
+  border: 1px solid #AACCFF;
+}
+
+.collapsible-header-glyph {
+  display: inline-block;
+  width: 1rem;
+}
+
+.collapsible-content {
+  padding: 0.3rem;
+  border-left: 1px solid #AACCFF;
+  border-right: 1px solid #AACCFF;
+  border-bottom: 1px solid #AACCFF;
+}
+
+input {
+  background-color: #2C1C1C;
+  color: #AACCFF;
+  border: 1px solid #AACCFF;
+  border-radius: 2px;
+  padding: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.load-music-input {
+  display: none;
+}
+
+.load-music-input + label {
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.3rem;
+}
+
+button {
+  background-color: #2C1C1C;
+  color: #AACCFF;
+  /*border: 1px solid #AACCFF;*/
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.3rem;
+}
+
+button:focus {
+  outline:0;
 }
