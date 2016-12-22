@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import LoadMusic from './loadMusic';
 
 const tickSize = 0.1;
 const uiUnit = 20;
@@ -34,30 +35,31 @@ export default class Player extends React.Component {
 
   play = () => {
     this.setState({ paused: false });
-    if (this.props.musicApi) this.props.musicApi.play();
+    if (this.state.musicApi) this.state.musicApi.play();
   };
 
   pause = () => {
     this.setState({ paused: true });
-    if (this.props.musicApi) this.props.musicApi.pause();
+    if (this.state.musicApi) this.state.musicApi.pause();
   };
 
   stop = () => {
     this.setState({ paused: true, currentTime: 0 });
-    if (this.props.musicApi) {
-      this.props.musicApi.pause();
-      this.props.musicApi.currentTime = 0;
+    if (this.state.musicApi) {
+      this.state.musicApi.pause();
+      this.state.musicApi.currentTime = 0;
     }
+    this.props.onStop();
   };
 
   renderMusicSegment = () => {
-    const { musicApi } = this.props;
+    const { musicApi } = this.state;
     if (!musicApi) return <noscript />;
 
     const width = musicApi.duration * 100 / this.state.duration;
     return (
       <div>
-        <div className="player-label" style={ { top: '0.5rem' } }>music</div>
+        <div className="player-label" style={ { top: '0rem' } }>music</div>
         <div className="player-segment" style={ { width: `${width}%` } } />
       </div>
     );
@@ -79,7 +81,7 @@ export default class Player extends React.Component {
 
   renderRelaySegments = () =>
     Object.keys(this.props.relayTimeMap).map((relay, index) => {
-      const top = (this.props.musicApi ? 1.5 : 0) + 1.5 * index + 0.5;
+      const top = (this.state.musicApi ? 1.5 : 0) + 1.5 * index;
       return <div key={ index }>
         <div className="player-label" style={ { top: `${top}rem` } }>{ `relay ${relay}` }</div>
         {
@@ -97,22 +99,31 @@ export default class Player extends React.Component {
   render = () => {
     const { paused, currentTime, duration } = this.state;
     const seekerPosition = currentTime * 100 / duration;
+    const height = Math.max(
+      (this.state.musicApi ? 1.5 : 0) + (Object.keys(this.props.relayTimeMap).length * 1.5) + 0.5,
+      3,
+    );
+
     return (
-      <div>
-        <div>
+      <div className="player-container">
+        <div className="player-time-container" style={ { height: `${height}rem` } }>
+          { this.renderMusicSegment() }
+          { this.renderRelaySegments() }
+          <div className="player-seeker-time" style={ { left: `${seekerPosition - 1}%` } }>
+            { `${currentTime.toFixed(1)}s` }
+          </div>
+          <div className="player-seeker" style={ { left: `${seekerPosition}%` } } />
+          { this.renderRuler() }
+        </div>
+        <div className="player-controls">
           <button onClick={ () => (paused ? this.play() : this.pause()) }>
             <i className={ paused ? 'fa fa-play' : 'fa fa-pause' } />
           </button>
           <button onClick={ this.stop }>
             <i className="fa fa-stop" />
           </button>
-        </div>
-        <div>{ currentTime }/{ duration }</div>
-        <div className="player-container">
-          { this.renderMusicSegment() }
-          { this.renderRelaySegments() }
-          <div className="player-seeker" style={ { left: `${seekerPosition}%` } } />
-          { this.renderRuler() }
+          <LoadMusic onMusicLoaded={ (musicApi, fileName) => this.setState({ musicApi, fileName }) } />
+          <div>{ this.state.fileName || 'no music file loaded' }</div>
         </div>
       </div>
     );

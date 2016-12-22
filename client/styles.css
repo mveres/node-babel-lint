@@ -2,23 +2,57 @@ body {
   background-color: #2C1C1C;
   color: #AACCFF;
   padding: 1rem;
+  font-family: sans-serif;
+}
+.connection-label {
+  display: inline-block;
+  width: 3.5rem;
+  padding: 0.3rem;
+}
+.connection-status-connected { color: '#32CD32' }
+.connection-status-disconnected { color: '#DC143C' }
+
+.text-button {
+  font-size: 1rem;
+  border: 1px solid #AACCFF;
+  margin: 0.3rem;
+  color: #32CD32;
 }
 
 .player-container {
-  margin-left: 3rem;
-  width: 95%;
-  height: 6rem;
   border: solid 1px;
   border-color: #AACCFF;
   position: relative;
+  margin-top: 2rem;
+  padding: 1rem;
+  padding-left: 4rem;
+  padding-top: 2rem;
+}
+
+.player-time-container {
+  border: solid 1px;
+  border-color: #AACCFF;
+  position: relative;
+}
+
+.player-seeker-time {
+  color: #FA8072;
+  position: absolute;
+  top: -1rem;
+  font-size: 0.9rem;
 }
 
 .player-seeker {
   position: absolute;
   height: 100%;
   width: 1px;
-  background-color: #AACCFF;
+  background-color: #FA8072;
   top: 0px;
+}
+
+.player-controls {
+  padding-top: 1rem;
+  text-align: center;
 }
 
 .player-ruler-bar {
@@ -37,18 +71,35 @@ body {
 
 .player-segment {
   position: absolute;
-  height: 0.9rem;
+  height: 1rem;
   background-color: #AACCFF;
-  top: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .player-label {
   position: absolute;
   font-size: 0.9rem;
-  left: -3rem;
+  left: -3.7rem;
+  margin-top: 0.5rem;
+}
+
+.relay-label {
+  padding: 0.3rem
+}
+
+.relay-done-button {
+  color: #32CD32;
+  font-size: 1rem;
+}
+
+.relay-remove-button {
+  color: #FA8072;
+  font-size: 1rem;
 }
 
 .collapsible-header {
+  background-color: #2C2C2C;
   padding: 0.3rem;
   border: 1px solid #AACCFF;
 }
@@ -72,6 +123,12 @@ input {
   border-radius: 2px;
   padding: 0.3rem;
   font-size: 0.9rem;
+  width: 8rem;
+}
+
+input[type=number] {
+  text-align: right;
+  width: 5rem;
 }
 
 .load-music-input {
@@ -79,19 +136,28 @@ input {
 }
 
 .load-music-input + label {
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   cursor: pointer;
+  padding: 0.5rem;
+}
+
+select {
+  background-color: #2C1C1C;
+  color: #AACCFF;
+  border: 1px solid #AACCFF;
+  border-radius: 0px;
+  margin-top: 1rem;
+  font-size: 1.2rem;
   padding: 0.3rem;
 }
 
 button {
   background-color: #2C1C1C;
   color: #AACCFF;
-  /*border: 1px solid #AACCFF;*/
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   cursor: pointer;
-  padding: 0.3rem;
+  padding: 0.5rem;
 }
 
 button:focus {

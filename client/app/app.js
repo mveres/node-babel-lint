@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Collapsible from 'react-collapsible';
 import Header from './header';
 import Connection from './connection';
-import LoadMusic from './loadMusic';
 import Relays from './relays';
 import Player from './player';
 import { switchRelay } from './relayAdapter';
@@ -30,6 +29,8 @@ class App extends React.Component {
           .forEach(switchRelay);
   };
 
+  stop = () => switchRelay({ no: 'ALL', state: 'off' });
+
   render() {
     return (
       <div className="app-container">
@@ -39,20 +40,14 @@ class App extends React.Component {
             <Connection />
           </div>
         </Collapsible>
-        <Collapsible trigger={ <Header text="Load Music" /> }
-                     triggerWhenOpen={ <Header text="Load Music" open={ true } /> }>
-          <div className="collapsible-content">
-            <LoadMusic onMusicLoaded={ musicApi => this.setState({ musicApi }) } />
-          </div>
-        </Collapsible>
         <Collapsible trigger={ <Header text="Relay Config" /> }
                      triggerWhenOpen={ <Header text="Relay Config" open={ true } /> }>
           <div className="collapsible-content">
             <Relays onRelayTimeMapChanged={ relayTimeMap => this.setState({ relayTimeMap }) } />
           </div>
         </Collapsible>
-        <Player musicApi={ this.state.musicApi }
-                relayTimeMap={ this.state.relayTimeMap || {} }
+        <Player relayTimeMap={ this.state.relayTimeMap || {} }
+                onStop={ this.stop }
                 onTick={ this.onPlayerTick } />
       </div>
     );

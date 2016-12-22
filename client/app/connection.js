@@ -15,21 +15,30 @@ export default class Connection extends React.Component {
 
   render = () =>
     <div>
-      <label htmlFor="host">
-        Host:
+      <div>
+        <span className="connection-label">host:</span>
         <input type="text"
                name="host"
                onChange={ event => this.setState({ host: event.target.value }) }
                value={ this.state.host } />
-      </label>
-      <label htmlFor="port">
-        Port:
+      </div>
+      <div>
+        <span className="connection-label">port:</span>
         <input type="text"
                name="port"
                onChange={ event => this.setState({ port: event.target.value }) }
                value={ this.state.port } />
-      </label>
-      <div> { this.state.connected ? 'Connected' : 'Not Connected'} </div>
-      <button onClick={ () => connect({ host: this.state.host, port: this.state.port }) } disabled={ !!this.state.connected }>Connect</button>
+      </div>
+      <div>
+        <span className="connection-label">status:</span>
+        <span className={ this.state.connected ? 'connection-status-connected' : 'connection-status-disconnected' }>
+          { this.state.connected ? 'connected' : 'not connected'}
+        </span>
+      </div>
+      <button className="text-button"
+              onClick={ () => connect({ host: this.state.host, port: this.state.port }) }
+              disabled={ !!this.state.connected }>
+        connect
+      </button>
     </div>;
 }
