@@ -22,14 +22,14 @@ export default class LoadMusic extends React.Component {
   render = () =>
     <span>
       <input type="file"
-             name="file"
-             id="file"
-             className="load-music-input"
+             name="music"
+             id="music"
+             className="load-file-input"
              accept="audio/*"
              multiple={ false }
              ref={ e => (this.fileLoader = e) }
              onChange={ this.fileLoaded } />
-           <label htmlFor="file">
+           <label htmlFor="music" className="load-music-label">
              <i className="fa fa-eject" />
            </label>
       <audio ref={ e => (this.audio = e) } />

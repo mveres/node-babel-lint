@@ -19,6 +19,21 @@ body {
   color: #32CD32;
 }
 
+.load-relays-label {
+  cursor: pointer;
+  font-size: 1rem;
+  border: 1px solid #AACCFF;
+  margin: 0.3rem;
+  padding: 0.52rem;
+  padding-bottom: 0.55rem;
+  color: #32CD32;
+}
+
+.text-button a {
+  color: #32CD32;
+  text-decoration: none;
+}
+
 .player-container {
   border: solid 1px;
   border-color: #AACCFF;
@@ -131,11 +146,11 @@ input[type=number] {
   width: 5rem;
 }
 
-.load-music-input {
+.load-file-input {
   display: none;
 }
 
-.load-music-input + label {
+.load-music-label {
   font-size: 1.7rem;
   cursor: pointer;
   padding: 0.5rem;

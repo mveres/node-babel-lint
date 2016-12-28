@@ -8,11 +8,16 @@ export default class Relays extends React.Component {
     this.state = {};
   }
 
+  computeSegmentId = (relayNo, { on, off }) => `${relayNo}-${on}-${off}`;
+
   add = () => this.setState({ adding: true });
 
   remove = (relayNo, segmentId) => {
     const { relayTimeMap } = this.state;
-    relayTimeMap[relayNo] = relayTimeMap[relayNo].filter(segment => segment.id !== segmentId);
+
+    relayTimeMap[relayNo] =
+      relayTimeMap[relayNo].filter(segment => this.computeSegmentId(relayNo, segment) !== segmentId);
+
     if (!relayTimeMap[relayNo].length) delete relayTimeMap[relayNo];
     this.setState(
       { relayTimeMap },
@@ -23,22 +28,48 @@ export default class Relays extends React.Component {
   done = () => {
     const relayNo = this.relayNo.options[this.relayNo.selectedIndex].value;
     const relayTimeMap = this.state.relayTimeMap || {};
+
     const timeArray = relayTimeMap[relayNo] || [];
-    this.setState({
-      relayTimeMap: {
-        ...relayTimeMap,
-        [relayNo]: [
-          ...timeArray,
-          {
-            on: this.onTime.value,
-            off: this.offTime.value,
-            id: `${relayNo}_${this.onTime.value}_${this.offTime.value}`,
-          },
-        ],
+    const newRelayTimeMap = {
+      ...relayTimeMap,
+      [relayNo]: [
+        ...timeArray,
+        {
+          on: this.onTime.value,
+          off: this.offTime.value,
+        },
+      ],
+    };
+
+    const blob = new Blob([JSON.stringify(newRelayTimeMap, null, 2)], { type: 'application/json' });
+    const downloadUrl = URL.createObjectURL(blob);
+
+    this.setState(
+      {
+        relayTimeMap: newRelayTimeMap,
+        adding: false,
+        downloadUrl,
       },
-      adding: false,
-    },
-    () => this.props.onRelayTimeMapChanged && this.props.onRelayTimeMapChanged(this.state.relayTimeMap || {}));
+      () => this.props.onRelayTimeMapChanged && this.props.onRelayTimeMapChanged(this.state.relayTimeMap || {}),
+    );
+  };
+
+  fileLoaded = () => {
+    const file = this.fileLoader.files[0];
+    if (!file) {
+      console.error('no relay config file loaded');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      console.log('loaded config:', reader.result);
+      this.setState(
+        { relayTimeMap: JSON.parse(reader.result) },
+        () => this.props.onRelayTimeMapChanged && this.props.onRelayTimeMapChanged(this.state.relayTimeMap || {}),
+      );
+    };
+
+    reader.readAsText(file);
   };
 
   renderRelayTimeMap = () => {
@@ -49,14 +80,14 @@ export default class Relays extends React.Component {
           Object.keys(this.state.relayTimeMap || {})
                 .map(relayNo =>
                   timeMap[relayNo].map(segment =>
-                    <div key={ segment.id }>
+                    <div key={ this.computeSegmentId(relayNo, segment) }>
                       <span className="relay-label">{ `relay ${relayNo}:` }</span>
                       <span className="relay-label">start:</span>
                       <span className="relay-label">{ segment.on }</span>
                       <span className="relay-label">stop:</span>
                       <span className="relay-label">{ segment.off }</span>
                       <button className="relay-remove-button"
-                              onClick={ () => this.remove(relayNo, segment.id) }>
+                              onClick={ () => this.remove(relayNo, this.computeSegmentId(relayNo, segment)) }>
                         <i className={ 'fa fa-trash' } />
                       </button>
                     </div>,
@@ -89,10 +120,25 @@ export default class Relays extends React.Component {
       { this.state.adding ? this.renderAddInput() : <noscript /> }
       {
         !this.state.adding &&
-        <button className="text-button"
-                onClick={ this.add }>
-          add
-        </button> ||
+        <div>
+          <button className="text-button" onClick={ this.add }> add </button>
+          {
+            this.state.downloadUrl &&
+            <a href={ this.state.downloadUrl } download="relay_time_config.json">
+              <button className="text-button"> save </button>
+            </a>
+          }
+
+          <input type="file"
+                 name="file"
+                 id="file"
+                 className="load-file-input"
+                 accept=".json"
+                 multiple={ false }
+                 ref={ e => (this.fileLoader = e) }
+                 onChange={ this.fileLoaded } />
+               <label htmlFor="file" className="load-relays-label"> load </label>
+        </div> ||
         <noscript />
       }
     </div>;
