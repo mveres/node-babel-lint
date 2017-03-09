@@ -41,8 +41,15 @@ export default class Relays extends React.Component {
       ],
     };
 
-    const blob = new Blob([JSON.stringify(newRelayTimeMap, null, 2)], { type: 'application/json' });
-    const downloadUrl = URL.createObjectURL(blob);
+    const csvHeader = 'relay,on,off';
+    const csvContent = _.keys(newRelayTimeMap)
+      .map(relay => newRelayTimeMap[relay].map(time => `${relay},${time.on},${time.off}`))
+      .reduce((acc, val) => [...acc, val]);
+
+    const csv = [csvHeader, ...csvContent].join('\n');
+    const csvBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+    const downloadUrl = URL.createObjectURL(csvBlob);
 
     this.setState(
       {
@@ -54,6 +61,23 @@ export default class Relays extends React.Component {
     );
   };
 
+  parseCsv = csv => {
+    const [, ...lines] = csv.split('\n');
+    return lines.filter(l => !!l)
+                .map(l => {
+                  const a = l.split(',').map(i => i.trim());
+                  return { relay: +a[0], on: +a[1], off: +a[2] };
+                })
+                .reduce(
+                  (acc, val) => {
+                    const { relay, ...time } = val;
+                    acc[relay] = [...(acc[relay] || []), time];
+                    return acc;
+                  },
+                  {},
+                );
+  };
+
   fileLoaded = () => {
     const file = this.fileLoader.files[0];
     if (!file) {
@@ -63,8 +87,9 @@ export default class Relays extends React.Component {
     const reader = new FileReader();
     reader.onload = () => {
       console.log('loaded config:', reader.result);
+
       this.setState(
-        { relayTimeMap: JSON.parse(reader.result) },
+        { relayTimeMap: this.parseCsv(reader.result) },
         () => this.props.onRelayTimeMapChanged && this.props.onRelayTimeMapChanged(this.state.relayTimeMap || {}),
       );
     };
@@ -124,7 +149,7 @@ export default class Relays extends React.Component {
           <button className="text-button" onClick={ this.add }> add </button>
           {
             this.state.downloadUrl &&
-            <a href={ this.state.downloadUrl } download="relay_time_config.json">
+            <a href={ this.state.downloadUrl } download="relay_time_config.csv">
               <button className="text-button"> save </button>
             </a>
           }
@@ -133,11 +158,11 @@ export default class Relays extends React.Component {
                  name="file"
                  id="file"
                  className="load-file-input"
-                 accept=".json"
+                 accept=".csv"
                  multiple={ false }
                  ref={ e => (this.fileLoader = e) }
                  onChange={ this.fileLoaded } />
-               <label htmlFor="file" className="load-relays-label"> load </label>
+          <label htmlFor="file" className="load-relays-label"> load </label>
         </div> ||
         <noscript />
       }
