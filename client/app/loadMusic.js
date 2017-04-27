@@ -1,4 +1,5 @@
 import React from 'react';
+import { eject } from './icons';
 
 export default class LoadMusic extends React.Component {
 
@@ -20,7 +21,7 @@ export default class LoadMusic extends React.Component {
   };
 
   render = () =>
-    <span>
+    <span className="load-music">
       <input type="file"
              name="music"
              id="music"
@@ -30,7 +31,7 @@ export default class LoadMusic extends React.Component {
              ref={ e => (this.fileLoader = e) }
              onChange={ this.fileLoaded } />
            <label htmlFor="music" className="load-music-label">
-             <i className="fa fa-eject" />
+             { eject() }
            </label>
       <audio ref={ e => (this.audio = e) } />
     </span>;

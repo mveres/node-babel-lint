@@ -67,7 +67,13 @@ body {
 
 .player-controls {
   padding-top: 1rem;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.load-music {
+  padding-top: .3rem;
 }
 
 .player-ruler-bar {
@@ -99,29 +105,33 @@ body {
   margin-top: 0.5rem;
 }
 
+.relay-controls {
+  display: flex;
+  align-items: center;
+}
+
 .relay-label {
   padding: 0.3rem
 }
 
-.relay-done-button {
-  color: #32CD32;
-  font-size: 1rem;
+.relay-done-button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #32CD32;
 }
 
-.relay-remove-button {
-  color: #FA8072;
-  font-size: 1rem;
+.relay-remove-button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #FA8072;
 }
 
 .collapsible-header {
   background-color: #2C2C2C;
   padding: 0.3rem;
   border: 1px solid #AACCFF;
-}
-
-.collapsible-header-glyph {
-  display: inline-block;
-  width: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .collapsible-content {
@@ -161,7 +171,6 @@ select {
   color: #AACCFF;
   border: 1px solid #AACCFF;
   border-radius: 0px;
-  margin-top: 1rem;
   font-size: 1.2rem;
   padding: 0.3rem;
 }
@@ -172,9 +181,23 @@ button {
   border: none;
   font-size: 1.7rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: .5rem;
+}
+
+button svg {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+label svg {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 button:focus {
   outline:0;
+}
+
+svg {
+  fill: #AACCFF;
 }

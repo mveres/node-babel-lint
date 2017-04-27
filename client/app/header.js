@@ -1,13 +1,11 @@
 import React from 'react';
+import { arrowRight, arrowDown } from './icons';
 
 export default props => {
   const { open, text } = props;
-  const glyph = open ? 'fa fa-angle-down' : 'fa fa-angle-right';
   return (
     <div className="collapsible-header">
-      <span className="collapsible-header-glyph">
-        <span className={ glyph } />
-      </span>
+      { open ? arrowDown() : arrowRight() }
       <span>{ text }</span>
     </div>
   );

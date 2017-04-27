@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import LoadMusic from './loadMusic';
+import { play, pause, stop } from './icons';
 
 const tickSize = 0.1;
 const uiUnit = 20;
@@ -117,10 +118,10 @@ export default class Player extends React.Component {
         </div>
         <div className="player-controls">
           <button onClick={ () => (paused ? this.play() : this.pause()) }>
-            <i className={ paused ? 'fa fa-play' : 'fa fa-pause' } />
+            { paused ? play() : pause() }
           </button>
           <button onClick={ this.stop }>
-            <i className="fa fa-stop" />
+            { stop() }
           </button>
           <LoadMusic onMusicLoaded={ (musicApi, fileName) => this.setState({ musicApi, fileName }) } />
           <div>{ this.state.fileName || 'no music file loaded' }</div>

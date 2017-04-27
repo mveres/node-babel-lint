@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import { trash, check } from './icons';
 
 export default class Relays extends React.Component {
 
@@ -105,15 +106,15 @@ export default class Relays extends React.Component {
           Object.keys(this.state.relayTimeMap || {})
                 .map(relayNo =>
                   timeMap[relayNo].map(segment =>
-                    <div key={ this.computeSegmentId(relayNo, segment) }>
-                      <span className="relay-label">{ `relay ${relayNo}:` }</span>
-                      <span className="relay-label">start:</span>
-                      <span className="relay-label">{ segment.on }</span>
-                      <span className="relay-label">stop:</span>
-                      <span className="relay-label">{ segment.off }</span>
+                    <div key={ this.computeSegmentId(relayNo, segment) } className="relay-controls">
+                      <div className="relay-label">{ `relay ${relayNo}:` }</div>
+                      <div className="relay-label">start:</div>
+                      <div className="relay-label">{ segment.on }</div>
+                      <div className="relay-label">stop:</div>
+                      <div className="relay-label">{ segment.off }</div>
                       <button className="relay-remove-button"
                               onClick={ () => this.remove(relayNo, this.computeSegmentId(relayNo, segment)) }>
-                        <i className={ 'fa fa-trash' } />
+                        { trash() }
                       </button>
                     </div>,
                   ),
@@ -124,18 +125,18 @@ export default class Relays extends React.Component {
   };
 
   renderAddInput = () =>
-    <div>
-      <span className="relay-label">relay #:</span>
+    <div className="relay-controls">
+      <div className="relay-label">relay #:</div>
       <select ref={ i => (this.relayNo = i) }>
         { _.range(1, 17).map(i => <option key={ i } value={ i }>{ i }</option>) }
       </select>
-      <span className="relay-label">start:</span>
+      <div className="relay-label">start:</div>
       <input ref={ i => (this.onTime = i) } type="number" step="0.1" />
-      <span className="relay-label">stop:</span>
+      <div className="relay-label">stop:</div>
       <input  ref={ i => (this.offTime = i) } type="number" step="0.1" />
       <button className="relay-done-button"
               onClick={ this.done }>
-        <i className={ 'fa fa-check' } />
+        { check() }
       </button>
     </div>;
 
