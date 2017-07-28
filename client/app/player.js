@@ -1,7 +1,8 @@
 import React from 'react';
-import _ from 'lodash';
+import range from 'lodash/range';
 import LoadMusic from './loadMusic';
 import { play, pause, stop } from './icons';
+import { onConnected } from './relayAdapter';
 
 const tickSize = 0.1;
 const uiUnit = 20;
@@ -16,6 +17,8 @@ export default class Player extends React.Component {
       duration: 240,
       paused: true,
     };
+
+    onConnected(({ connected }) => !connected && this.pause());
   }
 
   componentDidMount = () => {
@@ -70,7 +73,7 @@ export default class Player extends React.Component {
     const unit = uiUnit * 100 / this.state.duration;
     const barsNo = this.state.duration / uiUnit;
 
-    return _.range(1, barsNo)
+    return range(1, barsNo)
             .map(i => <div key={ i }>
                     <div className="player-ruler-bar" style={ { left: `${i * unit}%` } } />
                     <div className="player-ruler-stamp" style={ { left: `${i * unit - 0.5}%` } }>

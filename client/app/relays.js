@@ -1,5 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
+import range from 'lodash/range';
+import keys from 'lodash/keys';
 import { trash, check } from './icons';
 
 export default class Relays extends React.Component {
@@ -43,7 +44,7 @@ export default class Relays extends React.Component {
     };
 
     const csvHeader = 'relay,on,off';
-    const csvContent = _.keys(newRelayTimeMap)
+    const csvContent = keys(newRelayTimeMap)
       .map(relay => newRelayTimeMap[relay].map(time => `${relay},${time.on},${time.off}`))
       .reduce((acc, val) => [...acc, val]);
 
@@ -128,7 +129,7 @@ export default class Relays extends React.Component {
     <div className="relay-controls">
       <div className="relay-label">relay #:</div>
       <select ref={ i => (this.relayNo = i) }>
-        { _.range(1, 17).map(i => <option key={ i } value={ i }>{ i }</option>) }
+        { range(1, 17).map(i => <option key={ i } value={ i }>{ i }</option>) }
       </select>
       <div className="relay-label">start:</div>
       <input ref={ i => (this.onTime = i) } type="number" step="0.1" />

@@ -10,7 +10,13 @@ export default class Connection extends React.Component {
       port: '1109',
     };
 
-    onConnected(connected => this.setState({ connected }));
+    onConnected(({ connected, failure }) => {
+      if (!connected) {
+        const msg = failure ? `Cannot connect!\n${failure}` : 'Disconnected!';
+        alert(msg); // eslint-disable-line
+      }
+      this.setState({ connected });
+    });
   }
 
   render = () =>
