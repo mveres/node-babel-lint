@@ -13,7 +13,7 @@ To run the basic http server:
  - `npm run electron`
  - to start a testing server: `node dist/socketServer.js`
  - to package app for all OSs: `npm run package` 
-
-
+ 
+ ![AppScreenShot](./ScreenShot.png?raw=true)
 
 License MIT
